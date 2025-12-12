@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0195)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-final_eb949.html?se=2026-06-13T03%3A33%3A11Z&sp=r&sv=2025-07-05&sr=b&sig=ozJzwhRHYs6SW0UXdFvmsUCMjFLFE7klSVM%2BkFWjlF8%3D -->
+<!-- saved from url=(0193)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-final_eb949.html?se=2026-06-13T03%3A37%3A02Z&sp=r&sv=2025-07-05&sr=b&sig=9MIpRufSb0gAbXl8/RhgMkWzNU9gbmytayqTrNbrL4Y%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -490,20 +490,20 @@
                 const firebaseApp = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
                 const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
 
-                const apiKey = prompt('Enter Firebase API Key:');
-                const databaseURL = prompt('Enter Firebase Database URL:');
-                const projectId = prompt('Enter Firebase Project ID:');
-
-                if (!apiKey || !databaseURL || !projectId) {
-                    showError('Firebase configuration is required');
+                // Get Firebase config from localStorage (set by host)
+                let firebaseConfig = localStorage.getItem('firebaseConfig');
+                
+                if (!firebaseConfig) {
+                    showError('Firebase configuration not found. Please make sure you scanned the QR code from the host screen.');
                     return;
                 }
 
-                const firebaseConfig = {
-                    apiKey: apiKey,
-                    databaseURL: databaseURL,
-                    projectId: projectId
-                };
+                firebaseConfig = JSON.parse(firebaseConfig);
+
+                if (!firebaseConfig.apiKey || !firebaseConfig.databaseURL || !firebaseConfig.projectId) {
+                    showError('Invalid Firebase configuration.');
+                    return;
+                }
 
                 const app = firebaseApp.initializeApp(firebaseConfig);
                 db = firebaseDatabase.getDatabase(app);
