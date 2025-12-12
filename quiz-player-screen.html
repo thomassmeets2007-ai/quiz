@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0198)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-complete_8f788.html?se=2026-06-13T02%3A49%3A15Z&sp=r&sv=2025-07-05&sr=b&sig=ZQtXiEp54H8nEtDx%2B16pxVpVcCZpQBWt4Z8vQLppBUs%3D -->
+<!-- saved from url=(0195)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-final_eb949.html?se=2026-06-13T03%3A33%3A11Z&sp=r&sv=2025-07-05&sr=b&sig=ozJzwhRHYs6SW0UXdFvmsUCMjFLFE7klSVM%2BkFWjlF8%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Player - Join the Game</title>
-    <link href="./Quiz Player - Join the Game_files/css2" rel="stylesheet">
-    <link href="./Quiz Player - Join the Game_files/all.min.css" rel="stylesheet">
+    <link href="./quiz-player-screen_files/css2" rel="stylesheet">
+    <link href="./quiz-player-screen_files/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -93,8 +93,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Join Screen */
-        .join-card {
+        .card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             border-radius: 24px;
@@ -157,16 +156,6 @@
             box-shadow: 0 8px 25px rgba(134, 188, 37, 0.6);
         }
 
-        /* Waiting Screen */
-        .waiting-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 60px 40px;
-            text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
         .spinner {
             width: 60px;
             height: 60px;
@@ -180,15 +169,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* Question Screen */
-        .question-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .question-header {
@@ -320,16 +300,6 @@
             50% { transform: scale(1.05); }
         }
 
-        /* Feedback Screen */
-        .feedback-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 60px 40px;
-            text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
         .feedback-icon {
             font-size: 4rem;
             margin-bottom: 20px;
@@ -351,22 +321,6 @@
         .current-score {
             font-size: 1.1rem;
             opacity: 0.8;
-        }
-
-        /* Leaderboard Screen */
-        .leaderboard-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .leaderboard-title {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 30px;
-            text-align: center;
         }
 
         .leaderboard-item {
@@ -407,7 +361,7 @@
         }
 
         @media (max-width: 600px) {
-            .join-card, .waiting-card, .question-card, .feedback-card, .leaderboard-card {
+            .card {
                 padding: 30px 20px;
             }
 
@@ -436,7 +390,7 @@
     <div class="container">
         <!-- Join Screen -->
         <div id="join-screen" class="screen active">
-            <div class="join-card">
+            <div class="card">
                 <h1 class="title">🎮 Quiz Game</h1>
                 <p class="subtitle">Enter your name to join</p>
 
@@ -458,7 +412,7 @@
 
         <!-- Waiting Screen -->
         <div id="waiting-screen" class="screen">
-            <div class="waiting-card">
+            <div class="card">
                 <h2 class="title">Waiting for Quiz to Start</h2>
                 <div class="spinner"></div>
                 <p style="font-size: 1.1rem; opacity: 0.8;">The host will start the quiz soon...</p>
@@ -467,7 +421,7 @@
 
         <!-- Question Screen -->
         <div id="question-screen" class="screen">
-            <div class="question-card">
+            <div class="card">
                 <div class="question-header">
                     <div class="question-text" id="question-text"></div>
                     <div class="timer-bar">
@@ -482,7 +436,7 @@
 
         <!-- Feedback Screen -->
         <div id="feedback-screen" class="screen">
-            <div class="feedback-card">
+            <div class="card">
                 <div class="feedback-icon" id="feedback-icon"></div>
                 <div class="feedback-text" id="feedback-text"></div>
                 <div class="points-earned" id="points-earned"></div>
@@ -492,8 +446,8 @@
 
         <!-- Leaderboard Screen -->
         <div id="leaderboard-screen" class="screen">
-            <div class="leaderboard-card">
-                <h2 class="leaderboard-title">🏆 Final Leaderboard</h2>
+            <div class="card">
+                <h1 class="title">🏆 Final Leaderboard</h1>
                 <div id="leaderboard-list"></div>
             </div>
         </div>
@@ -533,16 +487,9 @@
             }
 
             try {
-                // Load Firebase SDK
                 const firebaseApp = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
                 const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
 
-                // Get Firebase config from host (stored in database)
-                // For now, we'll use a simple approach - the host must provide the config
-                // In production, you'd store this in the database
-
-                // For this demo, we need the Firebase config
-                // Ask user to provide it or get it from the host
                 const apiKey = prompt('Enter Firebase API Key:');
                 const databaseURL = prompt('Enter Firebase Database URL:');
                 const projectId = prompt('Enter Firebase Project ID:');
@@ -561,10 +508,8 @@
                 const app = firebaseApp.initializeApp(firebaseConfig);
                 db = firebaseDatabase.getDatabase(app);
 
-                // Generate player ID
                 playerId = 'player-' + Math.random().toString(36).substr(2, 9);
 
-                // Register player
                 const { set, ref } = firebaseDatabase;
                 await set(ref(db, `quizzes/${quizId}/players/${playerId}`), {
                     name: playerName,
@@ -573,7 +518,6 @@
                     answerTimes: {}
                 });
 
-                // Move to waiting screen
                 showScreen('waiting-screen');
                 listenForQuizStart();
 
@@ -648,7 +592,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     if (!hasAnswered) {
-                        submitAnswer(-1); // No answer
+                        submitAnswer(-1);
                     }
                 }
             }, 100);
@@ -662,13 +606,11 @@
             const { update, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             const answerTime = Date.now();
 
-            // Update answer in database
             await update(ref(db, `quizzes/${quizId}/players/${playerId}`), {
                 [`answers/${currentQuestion}`]: answerIndex,
                 [`answerTimes/${currentQuestion}`]: answerTime
             });
 
-            // Show feedback
             const question = quizData[currentQuestion];
             const isCorrect = answerIndex === question.correct;
 
@@ -680,14 +622,12 @@
                     answerBtn.classList.add('incorrect');
                 }
 
-                // Highlight correct answer
                 const correctBtn = document.getElementById(`answer-${question.correct}`);
                 if (!isCorrect) {
                     correctBtn.classList.add('correct');
                 }
             }
 
-            // Calculate points
             let points = 0;
             if (isCorrect && answerIndex >= 0) {
                 const timeElapsed = answerTime - questionStartTime;
@@ -695,7 +635,6 @@
                 playerScore += points;
             }
 
-            // Show feedback
             showFeedback(isCorrect, points);
         };
 
@@ -713,7 +652,6 @@
             document.getElementById('points-earned').textContent = `+${points} points`;
             document.getElementById('current-score').textContent = `Total Score: ${playerScore}`;
 
-            // Wait 3 seconds then move to next question
             setTimeout(() => {
                 currentQuestion++;
                 if (currentQuestion < quizData.length) {
