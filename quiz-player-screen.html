@@ -1,383 +1,63 @@
 <!DOCTYPE html>
-<!-- saved from url=(0194)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-simple_0ae2d.html?se=2026-06-13T03%3A46%3A25Z&sp=r&sv=2025-07-05&sr=b&sig=Sjtqzu1mp4d/UE59sDj62yofFvnVXirmIKXNjhNcdh4%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Player - Join the Game</title>
-    <link href="./quiz-player-screen_files/css2" rel="stylesheet">
-    <link href="./quiz-player-screen_files/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0D1F2D 0%, #1E3A4A 50%, #2D5A87 100%);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .bg-shape {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 20s infinite linear;
-        }
-
-        .bg-shape:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            width: 100px;
-            height: 100px;
-            background: #86BC25;
-            border-radius: 50%;
-        }
-
-        .bg-shape:nth-child(2) {
-            top: 60%;
-            right: 15%;
-            width: 150px;
-            height: 150px;
-            background: #3B82F6;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            animation-delay: -7s;
-        }
-
-        .bg-shape:nth-child(3) {
-            bottom: 20%;
-            left: 20%;
-            width: 80px;
-            height: 80px;
-            background: #8B5CF6;
-            transform: rotate(45deg);
-            animation-delay: -14s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .screen {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 60px 40px;
-            text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #86BC25, #3B82F6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.8;
-            margin-bottom: 40px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #86BC25, #9BC53D);
-            border: none;
-            border-radius: 12px;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-            box-shadow: 0 6px 20px rgba(134, 188, 37, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(134, 188, 37, 0.6);
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid #86BC25;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 30px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .question-header {
-            margin-bottom: 30px;
-        }
-
-        .question-text {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .timer-bar {
-            width: 100%;
-            height: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .timer-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #86BC25, #EF4444);
-            transition: width 0.1s linear;
-            border-radius: 10px;
-        }
-
-        .timer-text {
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .answers-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .answer-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 3px solid transparent;
-            border-radius: 16px;
-            padding: 25px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .answer-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .answer-btn:nth-child(1) {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
-            border-color: rgba(239, 68, 68, 0.5);
-        }
-
-        .answer-btn:nth-child(1) .answer-icon {
-            background: #EF4444;
-        }
-
-        .answer-btn:nth-child(2) {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3));
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-
-        .answer-btn:nth-child(2) .answer-icon {
-            background: #3B82F6;
-        }
-
-        .answer-btn:nth-child(3) {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3));
-            border-color: rgba(245, 158, 11, 0.5);
-        }
-
-        .answer-btn:nth-child(3) .answer-icon {
-            background: #F59E0B;
-        }
-
-        .answer-btn:nth-child(4) {
-            background: linear-gradient(135deg, rgba(134, 188, 37, 0.3), rgba(155, 197, 61, 0.3));
-            border-color: rgba(134, 188, 37, 0.5);
-        }
-
-        .answer-btn:nth-child(4) .answer-icon {
-            background: #86BC25;
-        }
-
-        .answer-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .answer-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .answer-btn.correct {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.8)) !important;
-            border-color: #22C55E !important;
-            animation: pulse 0.6s ease-out;
-        }
-
-        .answer-btn.incorrect {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 0.8)) !important;
-            border-color: #EF4444 !important;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .feedback-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .feedback-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .points-earned {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #86BC25;
-            margin-bottom: 20px;
-        }
-
-        .current-score {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        .leaderboard-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .leaderboard-rank {
-            font-size: 1.5rem;
-            font-weight: 800;
-            min-width: 50px;
-        }
-
-        .leaderboard-name {
-            flex: 1;
-            margin-left: 15px;
-            font-weight: 600;
-        }
-
-        .leaderboard-score {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #86BC25;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.2);
-            border: 2px solid #EF4444;
-            border-radius: 12px;
-            padding: 20px;
-            color: #EF4444;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .card {
-                padding: 30px 20px;
-            }
-
-            .title {
-                font-size: 2rem;
-            }
-
-            .question-text {
-                font-size: 1.4rem;
-            }
-
-            .answer-btn {
-                padding: 20px;
-                font-size: 1rem;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0D1F2D 0%, #1E3A4A 50%, #2D5A87 100%); color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .bg-shape { position: absolute; opacity: 0.1; animation: float 20s infinite linear; }
+        .bg-shape:nth-child(1) { top: 10%; left: 10%; width: 100px; height: 100px; background: #86BC25; border-radius: 50%; }
+        .bg-shape:nth-child(2) { top: 60%; right: 15%; width: 150px; height: 150px; background: #3B82F6; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); animation-delay: -7s; }
+        .bg-shape:nth-child(3) { bottom: 20%; left: 20%; width: 80px; height: 80px; background: #8B5CF6; transform: rotate(45deg); animation-delay: -14s; }
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(180deg); } }
+        .container { max-width: 600px; width: 100%; }
+        .screen { display: none; animation: fadeIn 0.5s ease-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-radius: 24px; padding: 60px 40px; text-align: center; border: 2px solid rgba(255, 255, 255, 0.2); }
+        .title { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #86BC25, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .subtitle { font-size: 1.1rem; opacity: 0.8; margin-bottom: 40px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group input { width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 12px; color: white; font-size: 1rem; font-family: 'Inter', sans-serif; }
+        .input-group input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        .btn { background: linear-gradient(135deg, #86BC25, #9BC53D); border: none; border-radius: 12px; padding: 15px 40px; font-size: 1.1rem; font-weight: 700; color: white; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; width: 100%; box-shadow: 0 6px 20px rgba(134, 188, 37, 0.4); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(134, 188, 37, 0.6); }
+        .spinner { width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.2); border-top: 4px solid #86BC25; border-radius: 50%; animation: spin 1s linear infinite; margin: 30px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .question-header { margin-bottom: 30px; }
+        .question-text { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; }
+        .timer-bar { width: 100%; height: 15px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+        .timer-fill { height: 100%; background: linear-gradient(90deg, #86BC25, #EF4444); transition: width 0.1s linear; border-radius: 10px; }
+        .timer-text { text-align: center; font-size: 1.2rem; font-weight: 700; }
+        .answers-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 30px; }
+        .answer-btn { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 3px solid transparent; border-radius: 16px; padding: 25px; font-size: 1.2rem; font-weight: 600; color: white; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: all 0.3s ease; }
+        .answer-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.5rem; flex-shrink: 0; }
+        .answer-btn:nth-child(1) { background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3)); border-color: rgba(239, 68, 68, 0.5); }
+        .answer-btn:nth-child(1) .answer-icon { background: #EF4444; }
+        .answer-btn:nth-child(2) { background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3)); border-color: rgba(59, 130, 246, 0.5); }
+        .answer-btn:nth-child(2) .answer-icon { background: #3B82F6; }
+        .answer-btn:nth-child(3) { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3)); border-color: rgba(245, 158, 11, 0.5); }
+        .answer-btn:nth-child(3) .answer-icon { background: #F59E0B; }
+        .answer-btn:nth-child(4) { background: linear-gradient(135deg, rgba(134, 188, 37, 0.3), rgba(155, 197, 61, 0.3)); border-color: rgba(134, 188, 37, 0.5); }
+        .answer-btn:nth-child(4) .answer-icon { background: #86BC25; }
+        .answer-btn:hover:not(:disabled) { transform: translateY(-3px); border-color: rgba(255, 255, 255, 0.5); }
+        .answer-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .answer-btn.correct { background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.8)) !important; border-color: #22C55E !important; animation: pulse 0.6s ease-out; }
+        .answer-btn.incorrect { background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 0.8)) !important; border-color: #EF4444 !important; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .feedback-icon { font-size: 4rem; margin-bottom: 20px; }
+        .feedback-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; }
+        .points-earned { font-size: 2.5rem; font-weight: 800; color: #86BC25; margin-bottom: 20px; }
+        .current-score { font-size: 1.1rem; opacity: 0.8; }
+        .leaderboard-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .leaderboard-rank { font-size: 1.5rem; font-weight: 800; min-width: 50px; }
+        .leaderboard-name { flex: 1; margin-left: 15px; font-weight: 600; }
+        .leaderboard-score { font-size: 1.3rem; font-weight: 700; color: #86BC25; }
+        .error-message { background: rgba(239, 68, 68, 0.2); border: 2px solid #EF4444; border-radius: 12px; padding: 20px; color: #EF4444; margin-top: 20px; }
+        @media (max-width: 600px) { .card { padding: 30px 20px; } .title { font-size: 2rem; } .question-text { font-size: 1.4rem; } .answer-btn { padding: 20px; font-size: 1rem; } }
     </style>
 </head>
 <body>
@@ -388,29 +68,18 @@
     </div>
 
     <div class="container">
-        <!-- Join Screen -->
         <div id="join-screen" class="screen active">
             <div class="card">
                 <h1 class="title">🎮 Quiz Game</h1>
                 <p class="subtitle">Enter your name to join</p>
-
                 <div class="input-group">
                     <input type="text" id="player-name" placeholder="Your Name" maxlength="20">
                 </div>
-
-                <button class="btn" onclick="joinQuiz()">
-                    <i class="fas fa-play"></i> Join Quiz
-                </button>
-
-                <div id="error-display">
-                <div class="error-message">
-                    <strong><i class="fas fa-exclamation-circle"></i> Error:</strong> ❌ No quiz ID provided. Please scan the QR code from the host screen.
-                </div>
-            </div>
+                <button class="btn" onclick="joinQuiz()"><i class="fas fa-play"></i> Join Quiz</button>
+                <div id="error-display"></div>
             </div>
         </div>
 
-        <!-- Waiting Screen -->
         <div id="waiting-screen" class="screen">
             <div class="card">
                 <h2 class="title">Waiting for Quiz to Start</h2>
@@ -419,22 +88,17 @@
             </div>
         </div>
 
-        <!-- Question Screen -->
         <div id="question-screen" class="screen">
             <div class="card">
                 <div class="question-header">
                     <div class="question-text" id="question-text"></div>
-                    <div class="timer-bar">
-                        <div class="timer-fill" id="timer-fill"></div>
-                    </div>
+                    <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
                     <div class="timer-text"><span id="timer-text">15</span>s</div>
                 </div>
-
                 <div class="answers-grid" id="answers-grid"></div>
             </div>
         </div>
 
-        <!-- Feedback Screen -->
         <div id="feedback-screen" class="screen">
             <div class="card">
                 <div class="feedback-icon" id="feedback-icon"></div>
@@ -444,7 +108,6 @@
             </div>
         </div>
 
-        <!-- Leaderboard Screen -->
         <div id="leaderboard-screen" class="screen">
             <div class="card">
                 <h1 class="title">🏆 Final Leaderboard</h1>
@@ -454,18 +117,13 @@
     </div>
 
     <script type="module">
-        // ⚙️ FIREBASE CONFIGURATION - EDIT IN HOST FILE
-        // These credentials are set by the host and passed via URL
-        let firebaseConfig = null;
-        let db = null;
-        let quizId = '';
-        let playerId = '';
-        let playerName = '';
-        let currentQuestion = 0;
-        let playerScore = 0;
-        let timerInterval = null;
-        let questionStartTime = 0;
-        let hasAnswered = false;
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDz-6CA1h6GGA50sAOCQ0-3sA-hCWut9WU",
+            databaseURL: "https://quiz-townhall-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "quiz-townhall"
+        };
+
+        let db = null, quizId = '', playerId = '', playerName = '', currentQuestion = 0, playerScore = 0, timerInterval = null, questionStartTime = 0, hasAnswered = false;
 
         const quizData = [
             { question: "How many days in a year?", answers: ["56", "57", "58", "365"], correct: 3 },
@@ -473,104 +131,52 @@
             { question: "What is the biggest continent?", answers: ["Africa", "America", "Europe", "Asia"], correct: 3 }
         ];
 
-        // Get quiz ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         quizId = urlParams.get('quiz');
-
-        if (!quizId) {
-            showError('❌ No quiz ID provided. Please scan the QR code from the host screen.');
-        }
+        if (!quizId) showError('❌ No quiz ID provided. Please scan the QR code from the host screen.');
 
         window.joinQuiz = async function() {
             playerName = document.getElementById('player-name').value.trim();
-
-            if (!playerName) {
-                showError('Please enter your name');
-                return;
-            }
-
+            if (!playerName) { showError('Please enter your name'); return; }
             try {
                 const firebaseApp = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
                 const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-
-                // Get Firebase config from the host's stored data
-                // This is passed via localStorage from the host
-                firebaseConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
-
-                if (!firebaseConfig) {
-                    showError('❌ Firebase configuration not found. Make sure the host has started the quiz.');
-                    return;
-                }
-
-                const app = firebaseApp.initializeApp(firebaseConfig);
+                const app = firebaseApp.initializeApp(FIREBASE_CONFIG);
                 db = firebaseDatabase.getDatabase(app);
-
                 playerId = 'player-' + Math.random().toString(36).substr(2, 9);
-
                 const { set, ref } = firebaseDatabase;
-                await set(ref(db, `quizzes/${quizId}/players/${playerId}`), {
-                    name: playerName,
-                    score: 0,
-                    answers: {},
-                    answerTimes: {}
-                });
-
+                await set(ref(db, `quizzes/${quizId}/players/${playerId}`), { name: playerName, score: 0, answers: {}, answerTimes: {} });
                 showScreen('waiting-screen');
                 listenForQuizStart();
-
-            } catch (error) {
-                showError('Failed to join quiz: ' + error.message);
-            }
+            } catch (error) { showError('Failed to join quiz: ' + error.message); }
         };
 
         function showError(message) {
-            document.getElementById('error-display').innerHTML = `
-                <div class="error-message">
-                    <strong><i class="fas fa-exclamation-circle"></i> Error:</strong> ${message}
-                </div>
-            `;
+            document.getElementById('error-display').innerHTML = `<div class="error-message"><strong><i class="fas fa-exclamation-circle"></i> Error:</strong> ${message}</div>`;
         }
 
         function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
 
         async function listenForQuizStart() {
             const { onValue, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-            
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
                 const question = snapshot.val();
-                if (question !== null && question !== undefined) {
-                    currentQuestion = question;
-                    loadQuestion();
-                }
+                if (question !== null && question !== undefined) { currentQuestion = question; loadQuestion(); }
             });
         }
 
         async function loadQuestion() {
-            if (currentQuestion >= quizData.length) {
-                showLeaderboard();
-                return;
-            }
-
+            if (currentQuestion >= quizData.length) { showLeaderboard(); return; }
             hasAnswered = false;
             showScreen('question-screen');
-
             const question = quizData[currentQuestion];
             document.getElementById('question-text').textContent = question.question;
-
             const answersGrid = document.getElementById('answers-grid');
             const letters = ['A', 'B', 'C', 'D'];
-            answersGrid.innerHTML = question.answers.map((answer, index) => `
-                <button class="answer-btn" onclick="submitAnswer(${index})" id="answer-${index}">
-                    <div class="answer-icon">${letters[index]}</div>
-                    <span>${answer}</span>
-                </button>
-            `).join('');
-
+            answersGrid.innerHTML = question.answers.map((answer, index) => `<button class="answer-btn" onclick="submitAnswer(${index})" id="answer-${index}"><div class="answer-icon">${letters[index]}</div><span>${answer}</span></button>`).join('');
             questionStartTime = Date.now();
             startTimer();
         }
@@ -579,19 +185,12 @@
             let timeLeft = 15;
             document.getElementById('timer-text').textContent = timeLeft;
             document.getElementById('timer-fill').style.width = '100%';
-
             timerInterval = setInterval(() => {
                 timeLeft -= 0.1;
                 const percentage = (timeLeft / 15) * 100;
                 document.getElementById('timer-fill').style.width = percentage + '%';
                 document.getElementById('timer-text').textContent = Math.ceil(timeLeft);
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    if (!hasAnswered) {
-                        submitAnswer(-1);
-                    }
-                }
+                if (timeLeft <= 0) { clearInterval(timerInterval); if (!hasAnswered) submitAnswer(-1); }
             }, 100);
         }
 
@@ -599,45 +198,29 @@
             if (hasAnswered) return;
             hasAnswered = true;
             clearInterval(timerInterval);
-
             const { update, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             const answerTime = Date.now();
-
-            await update(ref(db, `quizzes/${quizId}/players/${playerId}`), {
-                [`answers/${currentQuestion}`]: answerIndex,
-                [`answerTimes/${currentQuestion}`]: answerTime
-            });
-
+            await update(ref(db, `quizzes/${quizId}/players/${playerId}`), { [`answers/${currentQuestion}`]: answerIndex, [`answerTimes/${currentQuestion}`]: answerTime });
             const question = quizData[currentQuestion];
             const isCorrect = answerIndex === question.correct;
-
             if (answerIndex >= 0) {
                 const answerBtn = document.getElementById(`answer-${answerIndex}`);
-                if (isCorrect) {
-                    answerBtn.classList.add('correct');
-                } else {
-                    answerBtn.classList.add('incorrect');
-                }
-
+                if (isCorrect) answerBtn.classList.add('correct');
+                else answerBtn.classList.add('incorrect');
                 const correctBtn = document.getElementById(`answer-${question.correct}`);
-                if (!isCorrect) {
-                    correctBtn.classList.add('correct');
-                }
+                if (!isCorrect) correctBtn.classList.add('correct');
             }
-
             let points = 0;
             if (isCorrect && answerIndex >= 0) {
                 const timeElapsed = answerTime - questionStartTime;
                 points = Math.max(0, Math.round(1000 - (timeElapsed * 1000 / 15000)));
                 playerScore += points;
             }
-
             showFeedback(isCorrect, points);
         };
 
         function showFeedback(isCorrect, points) {
             showScreen('feedback-screen');
-
             if (isCorrect) {
                 document.getElementById('feedback-icon').textContent = '✅';
                 document.getElementById('feedback-text').textContent = 'Correct!';
@@ -645,79 +228,34 @@
                 document.getElementById('feedback-icon').textContent = '❌';
                 document.getElementById('feedback-text').textContent = 'Incorrect!';
             }
-
             document.getElementById('points-earned').textContent = `+${points} points`;
             document.getElementById('current-score').textContent = `Total Score: ${playerScore}`;
-
-            setTimeout(() => {
-                currentQuestion++;
-                if (currentQuestion < quizData.length) {
-                    loadQuestion();
-                } else {
-                    showLeaderboard();
-                }
-            }, 3000);
+            setTimeout(() => { currentQuestion++; if (currentQuestion < quizData.length) loadQuestion(); else showLeaderboard(); }, 3000);
         }
 
         async function showLeaderboard() {
             showScreen('leaderboard-screen');
-
             const { get, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             const snapshot = await get(ref(db, `quizzes/${quizId}/players`));
             const players = snapshot.val() || {};
-
-            const leaderboard = Object.entries(players)
-                .map(([id, player]) => ({ name: player.name, score: player.score || 0 }))
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 10);
-
+            const leaderboard = Object.entries(players).map(([id, player]) => ({ name: player.name, score: player.score || 0 })).sort((a, b) => b.score - a.score).slice(0, 10);
             const medals = ['🥇', '🥈', '🥉'];
-
-            document.getElementById('leaderboard-list').innerHTML = leaderboard.map((player, index) => `
-                <div class="leaderboard-item">
-                    <div class="leaderboard-rank">${medals[index] || (index + 1)}</div>
-                    <div class="leaderboard-name">${player.name}</div>
-                    <div class="leaderboard-score">${player.score} pts</div>
-                </div>
-            `).join('');
+            document.getElementById('leaderboard-list').innerHTML = leaderboard.map((player, index) => `<div class="leaderboard-item"><div class="leaderboard-rank">${medals[index] || (index + 1)}</div><div class="leaderboard-name">${player.name}</div><div class="leaderboard-score">${player.score} pts</div></div>`).join('');
         }
     </script>
-
-<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"><template shadowrootmode="open"><style>
-  :host {
-    all: initial;
-  }
-
-  .gf-scroll-remove::-webkit-scrollbar {
-    border-radius-bottom-right: 15px;
-  }
-
-  button {
-    cursor: pointer;
-    transition: transform 0.1s ease;
-  }
-
-  button:active {
-    transform: scale(0.98);
-  }
-
-  .give-freely-close-button:hover {
-    opacity: 0.7;
-  }
-
-  input[type="radio"] {
-    margin-right: 8px;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid #e5e5e5;
-    margin: 1em 0;
-  }
-
-  @media (max-width: 600px), (max-height: 480px) {
-    #give-freely-checkout-popup {
-      display: none !important;
-    }
-  }
-</style><div><div class="gf-app"></div></div></template></div></body></html>
+</body>
+</html>
+What Changed:
+✅ Firebase Config Now Embedded
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDz-6CA1h6GGA50sAOCQ0-3sA-hCWut9WU",
+    databaseURL: "https://quiz-townhall-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "quiz-townhall"
+};
+✅ Removed localStorage Dependency
+Old code that failed:
+firebaseConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
+if (!firebaseConfig) {
+    showError('Firebase configuration not found...');
+    return;
+}
