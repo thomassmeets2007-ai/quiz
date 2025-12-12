@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Player - Join the Game</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -117,13 +119,22 @@
     </div>
 
     <script type="module">
+        // FIREBASE CONFIGURATION - EMBEDDED DIRECTLY
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyDz-6CA1h6GGA50sAOCQ0-3sA-hCWut9WU",
             databaseURL: "https://quiz-townhall-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "quiz-townhall"
         };
 
-        let db = null, quizId = '', playerId = '', playerName = '', currentQuestion = 0, playerScore = 0, timerInterval = null, questionStartTime = 0, hasAnswered = false;
+        let db = null;
+        let quizId = '';
+        let playerId = '';
+        let playerName = '';
+        let currentQuestion = 0;
+        let playerScore = 0;
+        let timerInterval = null;
+        let questionStartTime = 0;
+        let hasAnswered = false;
 
         const quizData = [
             { question: "How many days in a year?", answers: ["56", "57", "58", "365"], correct: 3 },
@@ -133,26 +144,46 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         quizId = urlParams.get('quiz');
-        if (!quizId) showError('❌ No quiz ID provided. Please scan the QR code from the host screen.');
+
+        if (!quizId) {
+            showError('No quiz ID in URL. Please scan the QR code from the host screen.');
+        }
 
         window.joinQuiz = async function() {
             playerName = document.getElementById('player-name').value.trim();
-            if (!playerName) { showError('Please enter your name'); return; }
+
+            if (!playerName) {
+                showError('Please enter your name');
+                return;
+            }
+
             try {
                 const firebaseApp = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
                 const firebaseDatabase = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+
                 const app = firebaseApp.initializeApp(FIREBASE_CONFIG);
                 db = firebaseDatabase.getDatabase(app);
+
                 playerId = 'player-' + Math.random().toString(36).substr(2, 9);
+
                 const { set, ref } = firebaseDatabase;
-                await set(ref(db, `quizzes/${quizId}/players/${playerId}`), { name: playerName, score: 0, answers: {}, answerTimes: {} });
+                await set(ref(db, `quizzes/${quizId}/players/${playerId}`), {
+                    name: playerName,
+                    score: 0,
+                    answers: {},
+                    answerTimes: {}
+                });
+
                 showScreen('waiting-screen');
                 listenForQuizStart();
-            } catch (error) { showError('Failed to join quiz: ' + error.message); }
+
+            } catch (error) {
+                showError('Connection error: ' + error.message);
+            }
         };
 
         function showError(message) {
-            document.getElementById('error-display').innerHTML = `<div class="error-message"><strong><i class="fas fa-exclamation-circle"></i> Error:</strong> ${message}</div>`;
+            document.getElementById('error-display').innerHTML = `<div class="error-message"><strong>Error:</strong> ${message}</div>`;
         }
 
         function showScreen(screenId) {
@@ -162,21 +193,37 @@
 
         async function listenForQuizStart() {
             const { onValue, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+            
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
                 const question = snapshot.val();
-                if (question !== null && question !== undefined) { currentQuestion = question; loadQuestion(); }
+                if (question !== null && question !== undefined) {
+                    currentQuestion = question;
+                    loadQuestion();
+                }
             });
         }
 
         async function loadQuestion() {
-            if (currentQuestion >= quizData.length) { showLeaderboard(); return; }
+            if (currentQuestion >= quizData.length) {
+                showLeaderboard();
+                return;
+            }
+
             hasAnswered = false;
             showScreen('question-screen');
+
             const question = quizData[currentQuestion];
             document.getElementById('question-text').textContent = question.question;
+
             const answersGrid = document.getElementById('answers-grid');
             const letters = ['A', 'B', 'C', 'D'];
-            answersGrid.innerHTML = question.answers.map((answer, index) => `<button class="answer-btn" onclick="submitAnswer(${index})" id="answer-${index}"><div class="answer-icon">${letters[index]}</div><span>${answer}</span></button>`).join('');
+            answersGrid.innerHTML = question.answers.map((answer, index) => `
+                <button class="answer-btn" onclick="submitAnswer(${index})" id="answer-${index}">
+                    <div class="answer-icon">${letters[index]}</div>
+                    <span>${answer}</span>
+                </button>
+            `).join('');
+
             questionStartTime = Date.now();
             startTimer();
         }
@@ -185,12 +232,19 @@
             let timeLeft = 15;
             document.getElementById('timer-text').textContent = timeLeft;
             document.getElementById('timer-fill').style.width = '100%';
+
             timerInterval = setInterval(() => {
                 timeLeft -= 0.1;
                 const percentage = (timeLeft / 15) * 100;
                 document.getElementById('timer-fill').style.width = percentage + '%';
                 document.getElementById('timer-text').textContent = Math.ceil(timeLeft);
-                if (timeLeft <= 0) { clearInterval(timerInterval); if (!hasAnswered) submitAnswer(-1); }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!hasAnswered) {
+                        submitAnswer(-1);
+                    }
+                }
             }, 100);
         }
 
@@ -198,29 +252,45 @@
             if (hasAnswered) return;
             hasAnswered = true;
             clearInterval(timerInterval);
+
             const { update, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             const answerTime = Date.now();
-            await update(ref(db, `quizzes/${quizId}/players/${playerId}`), { [`answers/${currentQuestion}`]: answerIndex, [`answerTimes/${currentQuestion}`]: answerTime });
+
+            await update(ref(db, `quizzes/${quizId}/players/${playerId}`), {
+                [`answers/${currentQuestion}`]: answerIndex,
+                [`answerTimes/${currentQuestion}`]: answerTime
+            });
+
             const question = quizData[currentQuestion];
             const isCorrect = answerIndex === question.correct;
+
             if (answerIndex >= 0) {
                 const answerBtn = document.getElementById(`answer-${answerIndex}`);
-                if (isCorrect) answerBtn.classList.add('correct');
-                else answerBtn.classList.add('incorrect');
+                if (isCorrect) {
+                    answerBtn.classList.add('correct');
+                } else {
+                    answerBtn.classList.add('incorrect');
+                }
+
                 const correctBtn = document.getElementById(`answer-${question.correct}`);
-                if (!isCorrect) correctBtn.classList.add('correct');
+                if (!isCorrect) {
+                    correctBtn.classList.add('correct');
+                }
             }
+
             let points = 0;
             if (isCorrect && answerIndex >= 0) {
                 const timeElapsed = answerTime - questionStartTime;
                 points = Math.max(0, Math.round(1000 - (timeElapsed * 1000 / 15000)));
                 playerScore += points;
             }
+
             showFeedback(isCorrect, points);
         };
 
         function showFeedback(isCorrect, points) {
             showScreen('feedback-screen');
+
             if (isCorrect) {
                 document.getElementById('feedback-icon').textContent = '✅';
                 document.getElementById('feedback-text').textContent = 'Correct!';
@@ -228,34 +298,42 @@
                 document.getElementById('feedback-icon').textContent = '❌';
                 document.getElementById('feedback-text').textContent = 'Incorrect!';
             }
+
             document.getElementById('points-earned').textContent = `+${points} points`;
             document.getElementById('current-score').textContent = `Total Score: ${playerScore}`;
-            setTimeout(() => { currentQuestion++; if (currentQuestion < quizData.length) loadQuestion(); else showLeaderboard(); }, 3000);
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showLeaderboard();
+                }
+            }, 3000);
         }
 
         async function showLeaderboard() {
             showScreen('leaderboard-screen');
+
             const { get, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             const snapshot = await get(ref(db, `quizzes/${quizId}/players`));
             const players = snapshot.val() || {};
-            const leaderboard = Object.entries(players).map(([id, player]) => ({ name: player.name, score: player.score || 0 })).sort((a, b) => b.score - a.score).slice(0, 10);
+
+            const leaderboard = Object.entries(players)
+                .map(([id, player]) => ({ name: player.name, score: player.score || 0 }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10);
+
             const medals = ['🥇', '🥈', '🥉'];
-            document.getElementById('leaderboard-list').innerHTML = leaderboard.map((player, index) => `<div class="leaderboard-item"><div class="leaderboard-rank">${medals[index] || (index + 1)}</div><div class="leaderboard-name">${player.name}</div><div class="leaderboard-score">${player.score} pts</div></div>`).join('');
+
+            document.getElementById('leaderboard-list').innerHTML = leaderboard.map((player, index) => `
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">${medals[index] || (index + 1)}</div>
+                    <div class="leaderboard-name">${player.name}</div>
+                    <div class="leaderboard-score">${player.score} pts</div>
+                </div>
+            `).join('');
         }
     </script>
 </body>
 </html>
-What Changed:
-✅ Firebase Config Now Embedded
-const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyDz-6CA1h6GGA50sAOCQ0-3sA-hCWut9WU",
-    databaseURL: "https://quiz-townhall-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "quiz-townhall"
-};
-✅ Removed localStorage Dependency
-Old code that failed:
-firebaseConfig = JSON.parse(localStorage.getItem('firebaseConfig'));
-if (!firebaseConfig) {
-    showError('Firebase configuration not found...');
-    return;
-}
