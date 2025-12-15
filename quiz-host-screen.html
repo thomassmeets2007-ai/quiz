@@ -1,566 +1,246 @@
 <!DOCTYPE html>
-<!-- saved from url=(0197)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-host-prefilled_984d6.html?se=2026-06-13T03%3A45%3A51Z&sp=r&sv=2025-07-05&sr=b&sig=j2jLBcyzKcA2W4LF3%2BvZ4nHnCIMgAIYtxv/x49x6bKw%3D -->
+<!-- saved from url=(0195)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-host-christmas_9dee4.html?se=2026-06-16T10%3A16%3A22Z&sp=r&sv=2025-07-05&sr=b&sig=XsvZLwRnoavbV8QBsyLKrWaVSRM07TFGC2R3TH21xks%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Host - Multiplayer Quiz System</title>
-    <link href="./quiz-host-screen_files/css2" rel="stylesheet">
-    <link href="./quiz-host-screen_files/all.min.css" rel="stylesheet">
-    <script src="./quiz-host-screen_files/qrcode.min.js.download"></script>
+    <title>🎄 Deloitte Christmas Quiz</title>
+    <link href="./quiz-host-screen_v2_files/css2" rel="stylesheet">
+    <link href="./quiz-host-screen_v2_files/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0B3D2C 0%, #1a5f3f 50%, #2d8659 100%); 
+            color: white; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0D1F2D 0%, #1E3A4A 50%, #2D5A87 100%);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
+        
+        /* Christmas snowflake animation */
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
+        .snowflake { position: absolute; color: white; font-size: 2rem; opacity: 0.8; animation: snowfall 10s linear infinite; }
+        @keyframes snowfall { 0% { top: -10%; opacity: 1; } 100% { top: 100%; opacity: 0.3; } }
+        
+        .snowflake:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+        .snowflake:nth-child(2) { left: 20%; animation-duration: 14s; animation-delay: 2s; }
+        .snowflake:nth-child(3) { left: 30%; animation-duration: 11s; animation-delay: 4s; }
+        .snowflake:nth-child(4) { left: 40%; animation-duration: 13s; animation-delay: 1s; }
+        .snowflake:nth-child(5) { left: 50%; animation-duration: 15s; animation-delay: 3s; }
+        .snowflake:nth-child(6) { left: 60%; animation-duration: 12s; animation-delay: 5s; }
+        .snowflake:nth-child(7) { left: 70%; animation-duration: 14s; animation-delay: 2s; }
+        .snowflake:nth-child(8) { left: 80%; animation-duration: 11s; animation-delay: 4s; }
+        .snowflake:nth-child(9) { left: 90%; animation-duration: 13s; animation-delay: 1s; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .screen { display: none; animation: fadeIn 0.5s ease-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .welcome-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(20px); 
+            border-radius: 24px; 
+            padding: 60px; 
+            text-align: center; 
+            border: 3px solid rgba(220, 20, 60, 0.5); 
+            max-width: 1000px; 
+            margin: 50px auto; 
+            box-shadow: 0 8px 32px rgba(220, 20, 60, 0.3);
         }
-
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
+        
+        .welcome-title { 
+            font-size: 3.5rem; 
+            font-weight: 800; 
+            background: linear-gradient(135deg, #DC143C, #FFD700); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin-bottom: 20px; 
         }
-
-        .bg-shape {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 20s infinite linear;
+        
+        .btn { 
+            background: linear-gradient(135deg, #DC143C, #FF6347); 
+            border: none; 
+            border-radius: 12px; 
+            padding: 18px 40px; 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            color: white; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-family: 'Inter', sans-serif; 
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4); 
         }
-
-        .bg-shape:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            width: 100px;
-            height: 100px;
-            background: #86BC25;
-            border-radius: 50%;
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(220, 20, 60, 0.6); }
+        
+        .btn-secondary { 
+            background: linear-gradient(135deg, #FFD700, #FFA500); 
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4); 
         }
-
-        .bg-shape:nth-child(2) {
-            top: 60%;
-            right: 15%;
-            width: 150px;
-            height: 150px;
-            background: #3B82F6;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            animation-delay: -7s;
+        .btn-secondary:hover { box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6); }
+        
+        .lobby-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 30px; }
+        .qr-section { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 40px; 
+            text-align: center; 
+            border: 2px solid rgba(220, 20, 60, 0.3); 
         }
-
-        .bg-shape:nth-child(3) {
-            bottom: 20%;
-            left: 20%;
-            width: 80px;
-            height: 80px;
-            background: #8B5CF6;
-            transform: rotate(45deg);
-            animation-delay: -14s;
+        #qrcode { background: white; padding: 20px; border-radius: 16px; display: inline-block; margin: 20px 0; }
+        #qrcode img { max-width: 100%; height: auto; }
+        
+        .player-url { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 12px; font-family: monospace; word-break: break-all; margin: 20px 0; font-size: 0.85rem; max-height: 100px; overflow-y: auto; }
+        .copy-btn { background: rgba(220, 20, 60, 0.3); border: 1px solid #DC143C; color: #FFD700; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 10px; transition: all 0.3s ease; }
+        .copy-btn:hover { background: rgba(220, 20, 60, 0.5); }
+        
+        .players-section { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 30px; 
+            border: 2px solid rgba(220, 20, 60, 0.3); 
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+        .player-count { font-size: 2rem; font-weight: 800; color: #FFD700; margin-bottom: 20px; }
+        .player-list { max-height: 400px; overflow-y: auto; }
+        .player-item { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .player-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #DC143C, #FFD700); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        
+        .question-header { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 30px; 
+            border: 2px solid rgba(220, 20, 60, 0.3); 
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
+        .question-number { color: #FFD700; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; }
+        .question-text { font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; }
+        
+        .timer-bar { width: 100%; height: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .timer-fill { height: 100%; background: linear-gradient(90deg, #FFD700, #DC143C); transition: width 0.1s linear; border-radius: 10px; }
+        .timer-text { text-align: center; font-size: 1.5rem; font-weight: 700; margin-top: 10px; }
+        
+        .answers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
+        .answer-btn-display { 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(10px); 
+            border: 3px solid transparent; 
+            border-radius: 16px; 
+            padding: 40px; 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+            transition: all 0.3s ease; 
         }
-
-        .screen {
-            display: none;
-            animation: fadeIn 0.5s ease-out;
+        .answer-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.8rem; flex-shrink: 0; }
+        
+        .answer-btn-display:nth-child(1) { background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(178, 34, 34, 0.3)); border-color: rgba(220, 20, 60, 0.5); }
+        .answer-btn-display:nth-child(1) .answer-icon { background: #DC143C; }
+        .answer-btn-display:nth-child(2) { background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(218, 165, 32, 0.3)); border-color: rgba(255, 215, 0, 0.5); }
+        .answer-btn-display:nth-child(2) .answer-icon { background: #FFD700; }
+        .answer-btn-display:nth-child(3) { background: linear-gradient(135deg, rgba(34, 139, 34, 0.3), rgba(50, 205, 50, 0.3)); border-color: rgba(34, 139, 34, 0.5); }
+        .answer-btn-display:nth-child(3) .answer-icon { background: #228B22; }
+        .answer-btn-display:nth-child(4) { background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(192, 192, 192, 0.3)); border-color: rgba(255, 255, 255, 0.5); }
+        .answer-btn-display:nth-child(4) .answer-icon { background: #C0C0C0; }
+        
+        .answer-btn-display.correct { background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.8)) !important; border-color: #22C55E !important; animation: pulse 0.6s ease-out; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
+        .response-counter { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 30px; 
+            border: 2px solid rgba(220, 20, 60, 0.3); 
+            text-align: center; 
+            margin-top: 30px; 
         }
-
-        .screen.active {
-            display: block;
+        .response-counter h3 { font-size: 1.2rem; margin-bottom: 15px; color: #FFD700; }
+        .counter-box { font-size: 3rem; font-weight: 800; color: #DC143C; }
+        .counter-box span { color: #FFD700; }
+        
+        .leaderboard-table { width: 100%; margin-top: 30px; }
+        .leaderboard-row { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            display: grid; 
+            grid-template-columns: 80px 1fr 150px; 
+            align-items: center; 
+            gap: 20px; 
+            animation: slideIn 0.3s ease-out; 
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .welcome-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 60px;
-            text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            max-width: 800px;
-            margin: 50px auto;
-        }
-
-        .welcome-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #86BC25, #3B82F6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-        }
-
-        .info-box {
-            background: rgba(59, 130, 246, 0.2);
-            border: 2px solid #3B82F6;
-            border-radius: 16px;
-            padding: 30px;
-            margin: 30px 0;
-            text-align: left;
-            color: #3B82F6;
-        }
-
-        .info-box h3 {
-            margin-bottom: 15px;
-            color: #3B82F6;
-        }
-
-        .info-box ol {
-            margin-left: 20px;
-            line-height: 1.8;
-        }
-
-        .config-input {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .config-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #86BC25, #9BC53D);
-            border: none;
-            border-radius: 12px;
-            padding: 18px 40px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 6px 20px rgba(134, 188, 37, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(134, 188, 37, 0.6);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
-        }
-
-        .lobby-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .qr-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        #qrcode {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            display: inline-block;
-            margin: 20px 0;
-        }
-
-        .player-url {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 12px;
-            font-family: monospace;
-            word-break: break-all;
-            margin: 20px 0;
-            font-size: 0.85rem;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-
-        .copy-btn {
-            background: rgba(134, 188, 37, 0.3);
-            border: 1px solid #86BC25;
-            color: #86BC25;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            background: rgba(134, 188, 37, 0.5);
-        }
-
-        .players-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .player-count {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #86BC25;
-            margin-bottom: 20px;
-        }
-
-        .player-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .player-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .player-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #86BC25, #3B82F6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .question-header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .question-number {
-            color: #86BC25;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .question-text {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .timer-bar {
-            width: 100%;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .timer-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #86BC25, #EF4444);
-            transition: width 0.1s linear;
-            border-radius: 10px;
-        }
-
-        .timer-text {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 10px;
-        }
-
-        .answers-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .answer-btn-display {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 3px solid transparent;
-            border-radius: 16px;
-            padding: 40px;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .answer-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.8rem;
-            flex-shrink: 0;
-        }
-
-        .answer-btn-display:nth-child(1) {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
-            border-color: rgba(239, 68, 68, 0.5);
-        }
-
-        .answer-btn-display:nth-child(1) .answer-icon {
-            background: #EF4444;
-        }
-
-        .answer-btn-display:nth-child(2) {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.3));
-            border-color: rgba(59, 130, 246, 0.5);
-        }
-
-        .answer-btn-display:nth-child(2) .answer-icon {
-            background: #3B82F6;
-        }
-
-        .answer-btn-display:nth-child(3) {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3));
-            border-color: rgba(245, 158, 11, 0.5);
-        }
-
-        .answer-btn-display:nth-child(3) .answer-icon {
-            background: #F59E0B;
-        }
-
-        .answer-btn-display:nth-child(4) {
-            background: linear-gradient(135deg, rgba(134, 188, 37, 0.3), rgba(155, 197, 61, 0.3));
-            border-color: rgba(134, 188, 37, 0.5);
-        }
-
-        .answer-btn-display:nth-child(4) .answer-icon {
-            background: #86BC25;
-        }
-
-        .answer-btn-display.correct {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.8)) !important;
-            border-color: #22C55E !important;
-            animation: pulse 0.6s ease-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .answer-count {
-            margin-left: auto;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 1rem;
-        }
-
-        .live-responses {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .response-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .response-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .response-badge.a { background: #EF4444; }
-        .response-badge.b { background: #3B82F6; }
-        .response-badge.c { background: #F59E0B; }
-        .response-badge.d { background: #86BC25; }
-
-        .leaderboard-table {
-            width: 100%;
-            margin-top: 30px;
-        }
-
-        .leaderboard-row {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            display: grid;
-            grid-template-columns: 80px 1fr 150px;
-            align-items: center;
-            gap: 20px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .rank {
-            font-size: 2rem;
-            font-weight: 800;
-            text-align: center;
-        }
-
+        .rank { font-size: 2rem; font-weight: 800; text-align: center; }
         .rank.gold { color: #FFD700; }
         .rank.silver { color: #C0C0C0; }
         .rank.bronze { color: #CD7F32; }
-
-        .player-name {
-            font-size: 1.3rem;
-            font-weight: 600;
+        .player-name { font-size: 1.3rem; font-weight: 600; }
+        .player-score { font-size: 1.5rem; font-weight: 700; color: #FFD700; text-align: right; }
+        
+        .intermediate-ranking { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 40px; 
+            border: 2px solid rgba(220, 20, 60, 0.3); 
+            text-align: center; 
+            margin: 30px 0; 
         }
-
-        .player-score {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #86BC25;
-            text-align: right;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.2);
-            border: 2px solid #EF4444;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #EF4444;
-        }
-
-        .success-message {
-            background: rgba(34, 197, 94, 0.2);
-            border: 2px solid #22C55E;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #22C55E;
-        }
-
-        @media (max-width: 1024px) {
-            .lobby-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .answers-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .question-text {
-                font-size: 2rem;
-            }
+        .intermediate-ranking h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 30px; color: #FFD700; }
+        
+        .error-message { background: rgba(220, 20, 60, 0.2); border: 2px solid #DC143C; border-radius: 12px; padding: 20px; margin: 20px 0; color: #FFD700; }
+        
+        @media (max-width: 1024px) { 
+            .lobby-grid { grid-template-columns: 1fr; } 
+            .answers-grid { grid-template-columns: 1fr; } 
+            .question-text { font-size: 2rem; } 
         }
     </style>
 </head>
 <body>
     <div class="bg-animation">
-        <div class="bg-shape"></div>
-        <div class="bg-shape"></div>
-        <div class="bg-shape"></div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
+        <div class="snowflake">❄️</div>
     </div>
 
     <div class="container">
-        <!-- Welcome Screen -->
-        <div id="welcome-screen" class="screen active">
+        <div id="welcome-screen" class="screen">
             <div class="welcome-card">
-                <h1 class="welcome-title">🎮 Quiz Host Control</h1>
-                <p style="font-size: 1.2rem; margin-bottom: 30px;">Multiplayer Quiz System</p>
-
-                <div class="info-box">
-                    <h3><i class="fas fa-info-circle"></i> Setup Instructions</h3>
-                    <p style="margin-bottom: 15px;">To use this quiz, you need to add your Firebase credentials to this file:</p>
-                    <ol>
-                        <li>Open this HTML file in a text editor</li>
-                        <li>Find the section: <code>// ⚙️ FIREBASE CONFIGURATION - EDIT HERE</code></li>
-                        <li>Replace the placeholder values with your Firebase credentials</li>
-                        <li>Save the file and reload in your browser</li>
-                        <li>Click "Start Quiz" to begin!</li>
-                    </ol>
-                </div>
-
+                <h1 class="welcome-title">🎄 Deloitte Actuarial Quiz 🎄</h1>
                 <div style="margin-top: 30px;">
                     <button class="btn" onclick="startQuiz()">
                         <i class="fas fa-rocket"></i> Start Quiz
                     </button>
                 </div>
-
                 <div id="error-display"></div>
             </div>
         </div>
 
-        <!-- Lobby Screen -->
-        <div id="lobby-screen" class="screen">
+        <div id="lobby-screen" class="screen active">
             <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 30px; text-align: center;">
                 <i class="fas fa-users"></i> Waiting for Players
             </h1>
-
             <div class="lobby-grid">
                 <div class="qr-section">
-                    <h2 style="margin-bottom: 20px;">Scan to Join</h2>
-                    <div id="qrcode"></div>
-                    <div class="info-box">
-                        <strong>📱 Player URL:</strong>
-                        <div class="player-url" id="player-url"></div>
+                    <h2 style="margin-bottom: 20px;">📱 Scan to Join</h2>
+                    <div id="qrcode"><img src="./quiz-host-screen_v2_files/saved_resource" alt="QR Code" style="border-radius: 8px; max-width: 100%;"></div>
+                    <div style="background: rgba(59, 130, 246, 0.2); border: 2px solid #DC143C; border-radius: 16px; padding: 30px; margin: 30px 0; text-align: left; color: white;">
+                        <strong>🔗 Player URL:</strong>
+                        <div class="player-url" id="player-url">https://thomassmeets2007-ai.github.io/quiz/quiz-player-screen.html?quiz=quiz-0aess51bj</div>
                         <button class="copy-btn" onclick="copyToClipboard()">📋 Copy URL</button>
                     </div>
                     <p style="margin-top: 20px; opacity: 0.8;">Players scan this QR code or visit the URL above to join the quiz</p>
@@ -570,9 +250,7 @@
                     <div class="player-count">
                         <i class="fas fa-user-friends"></i> <span id="player-count">0</span> Players
                     </div>
-                    <div class="player-list" id="player-list">
-                        <p style="opacity: 0.6; text-align: center;">Waiting for players to join...</p>
-                    </div>
+                    <div class="player-list" id="player-list"><p style="opacity: 0.6; text-align: center;">Waiting for players to join...</p></div>
                     <button class="btn" onclick="beginQuiz()" style="width: 100%; margin-top: 20px;">
                         <i class="fas fa-play"></i> Start Quiz
                     </button>
@@ -580,7 +258,6 @@
             </div>
         </div>
 
-        <!-- Question Screen -->
         <div id="question-screen" class="screen">
             <div class="question-header">
                 <div class="question-number">Question <span id="q-number">1</span> of 3</div>
@@ -593,9 +270,9 @@
 
             <div class="answers-grid" id="answers-display"></div>
 
-            <div class="live-responses">
-                <h3 style="margin-bottom: 20px;"><i class="fas fa-signal"></i> Live Responses</h3>
-                <div id="live-responses-list"></div>
+            <div class="response-counter">
+                <h3>📊 Responses</h3>
+                <div class="counter-box"><span id="responded-count">0</span>/<span id="total-count">0</span></div>
             </div>
 
             <button class="btn btn-secondary" id="next-btn" onclick="nextQuestion()" style="display: none; margin-top: 30px;">
@@ -603,10 +280,19 @@
             </button>
         </div>
 
-        <!-- Leaderboard Screen -->
+        <div id="intermediate-ranking-screen" class="screen">
+            <div class="intermediate-ranking">
+                <h2>🏆 Current Rankings 🏆</h2>
+                <div class="leaderboard-table" id="intermediate-leaderboard"></div>
+                <button class="btn btn-secondary" onclick="continueToNextQuestion()" style="margin-top: 30px;">
+                    Continue <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
         <div id="leaderboard-screen" class="screen">
             <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 30px; text-align: center;">
-                🏆 Final Leaderboard
+                🏆 Final Leaderboard 🏆
             </h1>
             <div class="leaderboard-table" id="leaderboard-table"></div>
             <button class="btn" onclick="location.reload()" style="display: block; margin: 40px auto;">
@@ -616,8 +302,6 @@
     </div>
 
     <script type="module">
-        // ⚙️ FIREBASE CONFIGURATION - EDIT HERE
-        // Replace these with your actual Firebase credentials
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyDz-6CA1h6GGA50sAOCQ0-3sA-hCWut9WU",
             databaseURL: "https://quiz-townhall-default-rtdb.europe-west1.firebasedatabase.app",
@@ -629,15 +313,27 @@
         let currentQuestion = 0;
         let timerInterval = null;
         let questionStartTime = 0;
+        let totalPlayers = 0;
 
         const quizData = [
-            { question: "How many days in a year?", answers: ["56", "57", "58", "365"], correct: 3 },
-            { question: "What vegetable is red?", answers: ["Tomato", "Salad", "Banana", "Orange"], correct: 0 },
-            { question: "What is the biggest continent?", answers: ["Africa", "America", "Europe", "Asia"], correct: 3 }
+            { 
+                question: "How many actuaries did Deloitte globally have in FY25?", 
+                answers: ["2015", "2076", "2085", "1965"], 
+                correct: 2 
+            },
+            { 
+                question: "What was Deloitte France's revenue in FY25?", 
+                answers: ["21.1 M", "20.2 M", "19.8 M", "20.4 M"], 
+                correct: 1 
+            },
+            { 
+                question: "An insurance company is assessing the risk of a Christmas party with 500 guests. Historical data shows: Probability of injury: 1% per guest, Average claim cost: $1,000 per injury. What is the expected loss?", 
+                answers: ["$5,000", "$500", "$50,000", "$10,000"], 
+                correct: 0 
+            }
         ];
 
         window.startQuiz = async function() {
-            // Check if credentials are configured
             if (FIREBASE_CONFIG.apiKey === "YOUR_API_KEY_HERE") {
                 showError('❌ Firebase credentials not configured. Please edit the HTML file and add your credentials.');
                 return;
@@ -680,20 +376,8 @@
             document.getElementById('player-url').textContent = playerURL;
 
             const qrcodeDiv = document.getElementById('qrcode');
-            qrcodeDiv.innerHTML = '';
-            
-            try {
-                new QRCode(qrcodeDiv, {
-                    text: playerURL,
-                    width: 300,
-                    height: 300,
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-            } catch (error) {
-                console.error('QR Code generation error:', error);
-            }
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(playerURL)}`;
+            qrcodeDiv.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="border-radius: 8px; max-width: 100%;">`;
 
             const { onValue, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             onValue(ref(db, `quizzes/${quizId}/players`), (snapshot) => {
@@ -705,6 +389,7 @@
         function updatePlayerList(players) {
             const playerList = document.getElementById('player-list');
             const playerCount = Object.keys(players).length;
+            totalPlayers = playerCount;
             document.getElementById('player-count').textContent = playerCount;
 
             if (playerCount === 0) {
@@ -742,6 +427,7 @@
             const question = quizData[currentQuestion];
             document.getElementById('q-number').textContent = currentQuestion + 1;
             document.getElementById('question-text').textContent = question.question;
+            document.getElementById('total-count').textContent = totalPlayers;
 
             const answersDisplay = document.getElementById('answers-display');
             const letters = ['A', 'B', 'C', 'D'];
@@ -749,7 +435,6 @@
                 <div class="answer-btn-display" id="answer-${index}">
                     <div class="answer-icon">${letters[index]}</div>
                     <span>${answer}</span>
-                    <span class="answer-count" id="count-${index}">0</span>
                 </div>
             `).join('');
 
@@ -780,58 +465,63 @@
             const { onValue, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             onValue(ref(db, `quizzes/${quizId}/players`), (snapshot) => {
                 const players = snapshot.val() || {};
-                updateLiveResponses(players);
+                updateResponseCounter(players);
             });
         }
 
-        function updateLiveResponses(players) {
-            const responsesList = document.getElementById('live-responses-list');
-            const counts = [0, 0, 0, 0];
-            const responses = [];
+        function updateResponseCounter(players) {
+            let respondedCount = 0;
 
             Object.entries(players).forEach(([id, player]) => {
                 if (player.answers && player.answers[currentQuestion] !== undefined) {
-                    const answer = player.answers[currentQuestion];
-                    counts[answer]++;
-                    responses.push({ name: player.name, answer });
+                    respondedCount++;
                 }
             });
 
-            counts.forEach((count, index) => {
-                const countEl = document.getElementById(`count-${index}`);
-                if (countEl) countEl.textContent = count;
-            });
-
-            const letters = ['A', 'B', 'C', 'D'];
-            responsesList.innerHTML = responses.map(r => `
-                <div class="response-item">
-                    <span>${r.name}</span>
-                    <span class="response-badge ${letters[r.answer].toLowerCase()}">${letters[r.answer]}</span>
-                </div>
-            `).join('') || '<p style="opacity: 0.6; text-align: center;">No responses yet...</p>';
+            document.getElementById('responded-count').textContent = respondedCount;
         }
 
         async function endQuestion() {
             const question = quizData[currentQuestion];
             document.getElementById(`answer-${question.correct}`).classList.add('correct');
             
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
             const { get, ref, update } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             const snapshot = await get(ref(db, `quizzes/${quizId}/players`));
             const players = snapshot.val() || {};
 
             for (const [playerId, player] of Object.entries(players)) {
-                if (player.answers && player.answers[currentQuestion] !== undefined) {
-                    const answer = player.answers[currentQuestion];
-                    const answerTime = player.answerTimes ? player.answerTimes[currentQuestion] : 0;
-                    
-                    if (answer === question.correct && answerTime) {
-                        const timeElapsed = answerTime - questionStartTime;
-                        const points = Math.max(0, Math.round(1000 - (timeElapsed * 1000 / 15000)));
-                        const currentScore = player.score || 0;
-                        await update(ref(db, `quizzes/${quizId}/players/${playerId}`), {
-                            score: currentScore + points
-                        });
+                try {
+                    if (!player.answers || player.answers[currentQuestion] === undefined) {
+                        continue;
                     }
+
+                    const answer = player.answers[currentQuestion];
+                    const answerTime = player.answerTimes ? player.answerTimes[currentQuestion] : null;
+                    
+                    if (!answerTime) {
+                        continue;
+                    }
+
+                    const isCorrect = answer === question.correct;
+                    let points = 0;
+
+                    if (isCorrect) {
+                        const timeElapsed = answerTime - questionStartTime;
+                        points = Math.max(0, Math.round(1000 - (timeElapsed / 15000) * 1000));
+                    }
+
+                    const currentScore = player.score || 0;
+                    const newScore = currentScore + points;
+                    
+                    await update(ref(db, `quizzes/${quizId}/players/${playerId}`), {
+                        score: newScore,
+                        lastUpdated: Date.now()
+                    });
+
+                } catch (error) {
+                    console.error(`Error processing player:`, error);
                 }
             }
 
@@ -843,14 +533,43 @@
             document.getElementById('next-btn').style.display = 'none';
 
             if (currentQuestion < quizData.length) {
-                const { set, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-                await set(ref(db, `quizzes/${quizId}/currentQuestion`), currentQuestion);
-                await set(ref(db, `quizzes/${quizId}/questionStartTime`), Date.now());
-                loadQuestion();
+                showIntermediateRanking();
             } else {
                 showLeaderboard();
             }
         };
+
+        window.continueToNextQuestion = async function() {
+            const { set, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+            await set(ref(db, `quizzes/${quizId}/currentQuestion`), currentQuestion);
+            await set(ref(db, `quizzes/${quizId}/questionStartTime`), Date.now());
+            showScreen('question-screen');
+            loadQuestion();
+        };
+
+        async function showIntermediateRanking() {
+            showScreen('intermediate-ranking-screen');
+
+            const { get, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+            const snapshot = await get(ref(db, `quizzes/${quizId}/players`));
+            const players = snapshot.val() || {};
+
+            const leaderboard = Object.entries(players)
+                .map(([id, player]) => ({ name: player.name, score: player.score || 0 }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10);
+
+            const medals = ['🥇', '🥈', '🥉'];
+            const rankClasses = ['gold', 'silver', 'bronze'];
+
+            document.getElementById('intermediate-leaderboard').innerHTML = leaderboard.map((player, index) => `
+                <div class="leaderboard-row">
+                    <div class="rank ${rankClasses[index] || ''}">${medals[index] || (index + 1)}</div>
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-score">${player.score} pts</div>
+                </div>
+            `).join('');
+        }
 
         async function showLeaderboard() {
             showScreen('leaderboard-screen');
