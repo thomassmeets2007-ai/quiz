@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0197)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-christmas_c1454.html?se=2026-06-16T10%3A20%3A11Z&sp=r&sv=2025-07-05&sr=b&sig=Ig5M1P0JLPsLPta3plRRS0eDY4riowhzSTuq2sL97vg%3D -->
+<!-- saved from url=(0205)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-christmas-fixed_b3f59.html?se=2026-06-16T10%3A30%3A19Z&sp=r&sv=2025-07-05&sr=b&sig=S%2BtkUadMOEqxp4cgo6UACRjheTxZkNwqg21CFF6aY7Q%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎄 Deloitte Actuarial Quiz - Player</title>
-    <link href="./quiz-player-screen_v2_files/css2" rel="stylesheet">
-    <link href="./quiz-player-screen_v2_files/all.min.css" rel="stylesheet">
+    <link href="./quiz-player-screen_files/css2" rel="stylesheet">
+    <link href="./quiz-player-screen_files/all.min.css" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -226,6 +226,7 @@
         let timerInterval = null;
         let questionStartTime = 0;
         let selectedAnswer = null;
+        let quizStarted = false;
 
         const quizData = [
             { 
@@ -276,7 +277,7 @@
 
                 // Create player entry
                 playerId = 'player-' + Math.random().toString(36).substr(2, 9);
-                const { set, ref, onValue } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+                const { set, ref, get } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
                 
                 await set(ref(db, `quizzes/${quizId}/players/${playerId}`), {
                     name: playerName,
@@ -286,8 +287,18 @@
                     joinedAt: Date.now()
                 });
 
-                showScreen('waiting-screen');
-                listenToQuizStart();
+                // Check if quiz has already started
+                const quizSnapshot = await get(ref(db, `quizzes/${quizId}/status`));
+                const quizStatus = quizSnapshot.val();
+                
+                if (quizStatus === 'active') {
+                    // Quiz already started, listen for question changes
+                    listenToQuestionChanges();
+                } else {
+                    // Quiz not started yet, show waiting screen
+                    showScreen('waiting-screen');
+                    listenToQuizStart();
+                }
 
             } catch (error) {
                 showError('Connection failed: ' + error.message);
@@ -310,6 +321,18 @@
         }
 
         async function listenToQuizStart() {
+            const { onValue, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+            
+            onValue(ref(db, `quizzes/${quizId}/status`), (snapshot) => {
+                const status = snapshot.val();
+                if (status === 'active' && !quizStarted) {
+                    quizStarted = true;
+                    listenToQuestionChanges();
+                }
+            });
+        }
+
+        async function listenToQuestionChanges() {
             const { onValue, ref } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
