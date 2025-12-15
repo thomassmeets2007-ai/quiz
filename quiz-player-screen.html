@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0197)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-final_753ae.html?se=2026-06-16T11%3A06%3A07Z&sp=r&sv=2025-07-05&sr=b&sig=U1clO4Gfya%2BM6MH9ADTmgv7jtknpvTSybtI%2ByXhpRxA%3D -->
+<!-- saved from url=(0193)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-fixed_f6c95.html?se=2026-06-16T11%3A08%3A56Z&sp=r&sv=2025-07-05&sr=b&sig=g5KiO3CyTpvAM1VS5UHQmxM5Kc7LenbKveYht2kHb2k%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -253,12 +253,13 @@
         let playerId = null;
         let playerName = null;
         let quizId = null;
-        let currentQuestion = 0;
+        let currentQuestion = -1;
         let timerInterval = null;
         let questionStartTime = 0;
         let selectedAnswer = null;
         let quizStarted = false;
         let playerAnswerTime = null;
+        let lastSeenQuestion = -1;
 
         const quizData = [
             { 
@@ -369,7 +370,9 @@
             
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
                 const question = snapshot.val();
-                if (question !== null && question !== undefined && question !== currentQuestion) {
+                // FIX: Use lastSeenQuestion to track if this is a new question
+                if (question !== null && question !== undefined && question !== lastSeenQuestion) {
+                    lastSeenQuestion = question;
                     currentQuestion = question;
                     showScreen('question-screen');
                     loadQuestion();
@@ -518,9 +521,11 @@
             document.getElementById('player-score').textContent = playerScore;
             
             // Listen for next question (host clicks next)
+            // FIX: Use lastSeenQuestion to detect when a new question is loaded
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
                 const nextQuestion = snapshot.val();
-                if (nextQuestion !== null && nextQuestion > currentQuestion) {
+                if (nextQuestion !== null && nextQuestion !== lastSeenQuestion) {
+                    lastSeenQuestion = nextQuestion;
                     currentQuestion = nextQuestion;
                     showScreen('question-screen');
                     loadQuestion();
