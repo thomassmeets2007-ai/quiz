@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0205)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-christmas-fixed_b3f59.html?se=2026-06-16T10%3A30%3A19Z&sp=r&sv=2025-07-05&sr=b&sig=S%2BtkUadMOEqxp4cgo6UACRjheTxZkNwqg21CFF6aY7Q%3D -->
+<!-- saved from url=(0198)https://storagegenaiplatformprod.blob.core.windows.net/public/quiz-player-improved_dd342.html?se=2026-06-16T11%3A02%3A13Z&sp=r&sv=2025-07-05&sr=b&sig=SmWA637D7l%2BWay06X2e1nkcMo3swnsd74SSfg40pufk%3D -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,11 +116,15 @@
         }
         .answer-btn:hover { transform: translateX(10px); }
         .answer-btn.selected { border-color: #FFD700; background: rgba(255, 215, 0, 0.2); }
+        .answer-btn.disabled { cursor: not-allowed; opacity: 0.6; }
         
         .answer-btn:nth-child(1) { background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(178, 34, 34, 0.3)); border-color: rgba(220, 20, 60, 0.5); }
         .answer-btn:nth-child(2) { background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(218, 165, 32, 0.3)); border-color: rgba(255, 215, 0, 0.5); }
         .answer-btn:nth-child(3) { background: linear-gradient(135deg, rgba(34, 139, 34, 0.3), rgba(50, 205, 50, 0.3)); border-color: rgba(34, 139, 34, 0.5); }
         .answer-btn:nth-child(4) { background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(192, 192, 192, 0.3)); border-color: rgba(255, 255, 255, 0.5); }
+        
+        .answer-btn.correct { background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(22, 163, 74, 0.8)) !important; border-color: #22C55E !important; }
+        .answer-btn.incorrect { background: linear-gradient(135deg, rgba(220, 20, 60, 0.8), rgba(178, 34, 34, 0.8)) !important; border-color: #DC143C !important; }
         
         .position-display { 
             background: rgba(255, 255, 255, 0.1); 
@@ -134,6 +138,30 @@
         .position-display h2 { font-size: 2rem; margin-bottom: 20px; color: #FFD700; }
         .position-text { font-size: 3rem; font-weight: 800; color: #DC143C; margin-bottom: 20px; }
         .score-text { font-size: 1.5rem; color: #FFD700; }
+        
+        .feedback-section { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            border-radius: 20px; 
+            padding: 30px; 
+            border: 2px solid rgba(220, 20, 60, 0.3); 
+            text-align: center; 
+            margin: 20px 0; 
+        }
+        
+        .feedback-correct { 
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3)); 
+            border-color: #22C55E !important; 
+        }
+        .feedback-correct h3 { color: #22C55E; font-size: 1.8rem; margin-bottom: 10px; }
+        
+        .feedback-incorrect { 
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(178, 34, 34, 0.3)); 
+            border-color: #DC143C !important; 
+        }
+        .feedback-incorrect h3 { color: #FF6347; font-size: 1.8rem; margin-bottom: 10px; }
+        
+        .points-display { font-size: 2rem; font-weight: 800; color: #FFD700; margin-top: 15px; }
         
         .waiting-message { 
             background: rgba(255, 255, 255, 0.1); 
@@ -203,10 +231,11 @@
 
         <div id="position-screen" class="screen">
             <div class="position-display">
-                <h2>📊 Round Complete!</h2>
+                <h2>📊 Question Complete!</h2>
+                <div id="feedback-display"></div>
                 <div class="position-text">Position: <span id="player-position">-</span></div>
                 <div class="score-text">Your Score: <span id="player-score">0</span> pts</div>
-                <p style="margin-top: 30px; opacity: 0.8;">Next question coming up...</p>
+                <p style="margin-top: 30px; opacity: 0.8;">Waiting for host to continue...</p>
             </div>
         </div>
     </div>
@@ -227,6 +256,7 @@
         let questionStartTime = 0;
         let selectedAnswer = null;
         let quizStarted = false;
+        let playerAnswerTime = null;
 
         const quizData = [
             { 
@@ -337,7 +367,7 @@
             
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
                 const question = snapshot.val();
-                if (question !== null && question !== undefined) {
+                if (question !== null && question !== undefined && question !== currentQuestion) {
                     currentQuestion = question;
                     showScreen('question-screen');
                     loadQuestion();
@@ -359,6 +389,7 @@
             `).join('');
 
             selectedAnswer = null;
+            playerAnswerTime = null;
             questionStartTime = Date.now();
             startTimer();
         }
@@ -384,6 +415,7 @@
         window.selectAnswer = async function(answerIndex) {
             clearInterval(timerInterval);
             selectedAnswer = answerIndex;
+            playerAnswerTime = Date.now();
 
             // Highlight selected answer
             document.querySelectorAll('.answer-btn').forEach((btn, idx) => {
@@ -392,6 +424,8 @@
                 } else {
                     btn.classList.remove('selected');
                 }
+                btn.classList.add('disabled');
+                btn.style.pointerEvents = 'none';
             });
 
             // Submit after a short delay
@@ -402,13 +436,12 @@
         async function submitAnswer() {
             const { update, ref, get } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
 
-            if (selectedAnswer !== null) {
-                const answerTime = Date.now();
+            if (selectedAnswer !== null && playerAnswerTime !== null) {
                 const answers = [];
                 const answerTimes = [];
                 
                 answers[currentQuestion] = selectedAnswer;
-                answerTimes[currentQuestion] = answerTime;
+                answerTimes[currentQuestion] = playerAnswerTime;
 
                 await update(ref(db, `quizzes/${quizId}/players/${playerId}`), {
                     answers: answers,
@@ -416,19 +449,55 @@
                 });
             }
 
-            // Wait for next question or show position
+            // Wait for host to click next question
             listenToNextQuestion();
         }
 
         async function listenToNextQuestion() {
             const { onValue, ref, get } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
             
-            // Show position screen
+            // Show position screen with feedback
             showScreen('position-screen');
             
+            // Get current player data and show feedback
+            const snapshot = await get(ref(db, `quizzes/${quizId}/players/${playerId}`));
+            const playerData = snapshot.val();
+            const question = quizData[currentQuestion];
+            
+            // Determine if answer was correct
+            const playerAnswer = playerData.answers ? playerData.answers[currentQuestion] : null;
+            const isCorrect = playerAnswer === question.correct;
+            
+            // Calculate points
+            let points = 0;
+            if (isCorrect && playerData.answerTimes && playerData.answerTimes[currentQuestion]) {
+                const answerTime = playerData.answerTimes[currentQuestion];
+                const timeElapsed = answerTime - questionStartTime;
+                points = Math.max(0, Math.round(1000 - (timeElapsed / 15000) * 1000));
+            }
+            
+            // Display feedback
+            const feedbackDisplay = document.getElementById('feedback-display');
+            if (isCorrect) {
+                feedbackDisplay.innerHTML = `
+                    <div class="feedback-section feedback-correct">
+                        <h3>✅ Correct!</h3>
+                        <div class="points-display">+${points} points</div>
+                    </div>
+                `;
+            } else {
+                feedbackDisplay.innerHTML = `
+                    <div class="feedback-section feedback-incorrect">
+                        <h3>❌ Incorrect</h3>
+                        <p style="margin-top: 10px;">The correct answer was: <strong>${question.answers[question.correct]}</strong></p>
+                        <div class="points-display">+0 points</div>
+                    </div>
+                `;
+            }
+            
             // Get current player position and score
-            const snapshot = await get(ref(db, `quizzes/${quizId}/players`));
-            const players = snapshot.val() || {};
+            const allPlayersSnapshot = await get(ref(db, `quizzes/${quizId}/players`));
+            const players = allPlayersSnapshot.val() || {};
             
             const leaderboard = Object.entries(players)
                 .map(([id, player]) => ({ id, name: player.name, score: player.score || 0 }))
@@ -440,7 +509,7 @@
             document.getElementById('player-position').textContent = playerPosition;
             document.getElementById('player-score').textContent = playerScore;
             
-            // Listen for next question
+            // Listen for next question (host clicks next)
             onValue(ref(db, `quizzes/${quizId}/currentQuestion`), (snapshot) => {
                 const nextQuestion = snapshot.val();
                 if (nextQuestion !== null && nextQuestion > currentQuestion) {
