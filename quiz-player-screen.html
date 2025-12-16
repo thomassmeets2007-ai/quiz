@@ -225,7 +225,7 @@
                 <div class="timer-bar">
                     <div class="timer-fill" id="timer-fill"></div>
                 </div>
-                <div class="timer-text"><span id="timer-text">15</span>s</div>
+                <div class="timer-text"><span id="timer-text">25</span>s</div>
             </div>
 
             <div class="answers-grid" id="answers-display"></div>
@@ -399,13 +399,13 @@
         }
 
         function startTimer() {
-            let timeLeft = 15;
+            let timeLeft = 25;
             document.getElementById('timer-text').textContent = timeLeft;
             document.getElementById('timer-fill').style.width = '100%';
 
             timerInterval = setInterval(() => {
                 timeLeft -= 0.1;
-                const percentage = (timeLeft / 15) * 100;
+                const percentage = (timeLeft / 25) * 100;
                 document.getElementById('timer-fill').style.width = percentage + '%';
                 document.getElementById('timer-text').textContent = Math.ceil(timeLeft);
 
@@ -477,7 +477,7 @@
             if (isCorrect && playerData.answerTimes && playerData.answerTimes[currentQuestion]) {
                 const answerTime = playerData.answerTimes[currentQuestion];
                 const timeElapsed = answerTime - questionStartTime;
-                points = Math.max(0, Math.round(1000 - (timeElapsed / 15000) * 1000));
+                points = Math.max(0, Math.round(1000 - (timeElapsed / 25000) * 1000));
             }
             
             // Display feedback and update title
